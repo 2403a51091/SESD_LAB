@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Singleton Pattern Demo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .log-box {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-top: 10px;
+      height: 150px;
+      overflow-y: auto;
+    }
+    button {
+      margin: 5px;
+      padding: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2>Singleton Pattern Demo</h2>
+  <p>
+    <b>Singleton ensures only one instance exists.</b>
+  </p>
+  <button onclick="createLogger()">
+    Create Logger Instance
+  </button>
+  <button onclick="logMessage()">
+    Add Log Message
+  </button>
+  <div class="log-box" id="output"></div>
+  <!-- Creates an initially empty container for displaying logs -->
+  <!-- class="log-box" applies CSS styling -->
+  <!-- id="output" allows JavaScript to locate the container -->
+
+  <script>
+    const Logger = (function () {
+      let instance;
+      function createInstance() {
+        const logs = [];
+        return {
+          addLog: function (msg) {
+            logs.push(msg);
+            displayLogs(logs);
+          },
+          getLogs: function () {
+            return logs;
+          }
+        };
+      }
+      return {
+        getInstance: function () {
+          if (!instance) {
+            instance = createInstance();
+            displayOutput("✅ New Logger instance created");
+          } else {
+            displayOutput("⚠️ Using existing Logger instance");
+          }
+          return instance;
+        }
+      };
+    })();
+    let logger;
+    function createLogger() {
+      logger = Logger.getInstance();
+      // Requests the Singleton instance
+      // First call creates the object
+      // Later calls return the same object
+    }
+    // Ends the createLogger() function
+
+    function logMessage() {
+      // Runs when the "Add Log Message" button is clicked
+
+      if (!logger) {
+        // Checks whether logger is undefined
+        // Prevents adding logs before obtaining the instance
+
+        displayOutput(
+          "❌ Please create a Logger instance first!"
+        );
+        // Displays an error message if logger is unavailable
+
+        return;
+        // Stops execution of logMessage() immediately
+      }
+      // Ends the if statement
+
+      const msg = "Log entry at " +
+                  new Date().toLocaleTimeString();
+      // Creates a message containing the current local time
+      // new Date() obtains the current date and time
+      // toLocaleTimeString() formats the time for display
+
+      logger.addLog(msg);
+      // Calls the addLog() method of the Singleton object
+      // Stores the message and updates the log display
+
+    }
+    // Ends the logMessage() function
+
+    function displayLogs(logs) {
+      // Defines a function to display all stored log messages
+      // logs is the array received from the Logger object
+
+      const out = document.getElementById("output");
+      // Finds the HTML element whose id is "output"
+      // Stores its reference in the variable out
+
+      out.innerHTML =
+        "<b>Logger Entries:</b><br>" + logs.join("<br>");
+      // Replaces the existing HTML inside the output container
+      // <b> displays "Logger Entries:" in bold
+      // <br> inserts a line break
+      // logs.join("<br>") combines messages with line breaks
+      // Previous status messages in the box are overwritten
+
+    }
+    // Ends the displayLogs() function
+
+    function displayOutput(msg) {
+      // Defines a function to display a status message
+      // msg contains the message to be displayed
+
+      const out = document.getElementById("output");
+      // Finds the output container using its unique ID
+
+      out.innerHTML += msg + "<br>";
+      // Appends the message to the existing HTML content
+      // += preserves existing content and adds new content
+      // <br> moves the next message to a new line
+
+    }
+    // Ends the displayOutput() function
+
+  </script>
+  <!-- Ends the JavaScript section -->
+
+</body>
+<!-- Ends the visible webpage content -->
+
+</html>
+<!-- Ends the HTML document -->
